@@ -8,38 +8,38 @@ public class Main {
 
     public static void main(String[] args) {
         balance = 1500;
-        validateAmount(balance, getAmount());
-    }
+        double amount = getWithdrawalAmount();
 
-    private static double getBalance(Integer integer) {
-        return integer; // Наявні кошти на рахунку
-    }
-
-    private static double getAmount() {
-        System.out.printf("Balance is USD %.2f.%n" +
-                "Enter purchase amount, USD: ", balance);
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextDouble();
-    }
-
-    // Метод валідації наявних коштів
-    private static void validateAmount(double balance, double withdrawal) {
-        if (withdrawal > balance) {
-            try {
-                throw new FundsException ("Insufficient funds!");
-            } catch (FundsException ex) {
-                System.out.println("123");
-            }
-        } else {
-            balance = getBalance(balance, withdrawal);
-            System.out.printf("Funds are OK. Purchase paid." +
-                    "%nBalance is USD %.2f", balance);
+        try {
+            validateWithdrawalAmount(balance, amount);
+        } catch (FundsException ex) {
+            System.out.println("Error: " + ex.getMessage());
         }
     }
 
-    // Метод розрахунку наявних коштів на рахунку
-    // після зняття певної суми коштів
-    private static double getBalance(double balance, double withdrawal) {
+
+    private static double getWithdrawalAmount() {
+        System.out.printf("Balance is USD %.2f.%n" + "Enter purchase amount, USD: ", balance);
+        Scanner scanner = new Scanner(System.in);
+        double amount = scanner.nextDouble();
+
+        return amount;
+    }
+
+
+    private static void validateWithdrawalAmount(double balance, double withdrawal) throws FundsException {
+
+        if (withdrawal > balance) {
+            StringBuilder errorMessage = new StringBuilder().append("Insufficient funds! ").append("Need: $").append(withdrawal).append(", ").append("Available: $").append(balance);
+            throw new FundsException(errorMessage.toString());
+        } else {
+            double newBalance = getRemainingBalance(balance, withdrawal);
+            StringBuilder successMessage = new StringBuilder().append("Funds are OK. Purchase paid.\n").append("Balance is USD ").append(String.format("%.2f", newBalance));
+            System.out.printf(successMessage.toString());
+        }
+    }
+
+    private static double getRemainingBalance(double balance, double withdrawal) {
         return balance - withdrawal;
     }
 }

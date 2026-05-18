@@ -1,7 +1,7 @@
 package app;
 
-public class FundsException extends Throwable {
-    public FundsException (String message) {
-        super (message);
+public class FundsException extends Exception {
+    public FundsException(String message) {
+        super(message);
     }
 }
