@@ -12,6 +12,8 @@ public class Main {
         try {
             double amount = getWithdrawalAmount(balance);
             validateWithdrawalAmount(balance, amount);
+            balance = getRemainingBalance(balance, amount);
+            printSuccessMessage(balance);
         } catch (FundsException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
@@ -37,13 +39,16 @@ public class Main {
             String errorMessage = String.format("Insufficient funds! Need: $%.2f, Available: $%.2f", withdrawal, balance);
             throw new FundsException(errorMessage);
         }
-
-        double newBalance = getRemainingBalance(balance, withdrawal);
-
-        System.out.printf("Funds are OK. Purchase paid.%nBalance is USD %.2f", newBalance);
     }
 
     private static double getRemainingBalance(double balance, double withdrawal) {
         return balance - withdrawal;
+    }
+
+    private static void printSuccessMessage(double balance) {
+        System.out.printf(
+                "Funds are OK. Purchase paid.%nBalance is USD %.2f",
+                balance
+        );
     }
 }
